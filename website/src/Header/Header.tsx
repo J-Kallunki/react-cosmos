@@ -23,14 +23,14 @@ export function Header({ visible, fixed }: Props) {
     >
       <Content>
         <CosmonautContainer>
-          <CosmonautButton to="/" />
+          <CosmonautButton to="/" visualOnly />
         </CosmonautContainer>
         <Body>
           <Title>
             <InternalLink to="/">React Cosmos</InternalLink>
           </Title>
           <Links>
-            <ExternalLink href="https://github.com/react-cosmos/react-cosmos/blob/master/README.md#table-of-contents">
+            <ExternalLink href="https://github.com/react-cosmos/react-cosmos/tree/master/docs">
               Docs
             </ExternalLink>
             <LinkSeparator>/</LinkSeparator>

@@ -2,15 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 import { About } from './About';
 import { Benefits } from './Benefits';
+import { Demo } from './Demo';
+import { Description } from './Description';
 import { Features } from './Features/Features';
 import { Footer } from './Footer/Footer';
 import { StickyHeader } from './Header/StickyHeader';
-import { Hero } from './Hero';
 import { Quote } from './Quote';
 import { Rocket } from './Rocket';
 import { grayToWhiteGradient, whiteToGrayGradient } from './shared/colors';
-import { SplashScreen } from './SplashScreen/SplashScreen';
 import { Height } from './shared/Height';
+import { SplashScreen } from './SplashScreen/SplashScreen';
 
 const headerHeight = 81;
 
@@ -25,8 +26,10 @@ export function Root() {
           tablet={headerHeight + 128}
           desktop={headerHeight + 192}
         />
-        <Hero />
+        <Demo />
         <Height mobile={96} tablet={128} desktop={192} />
+        <Description />
+        <Height mobile={64} tablet={64} desktop={96} />
         <Features />
         <Height mobile={96} tablet={128} desktop={192} />
       </Gradient1>

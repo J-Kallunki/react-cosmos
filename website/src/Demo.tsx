@@ -1,46 +1,75 @@
 import React from 'react';
 import styled from 'styled-components';
-import { contentMaxWidth, mobileMaxWidth } from './shared/breakpoints';
+import { mobileMaxWidth } from './shared/breakpoints';
 import { ExternalLink } from './shared/ExternalLink';
+import { livePreviewUrl } from './shared/livePreviewUrl';
 import { getSlideInStyle, slideInTransition } from './shared/slideIn';
 import { NoWrap } from './shared/styledPrimitives';
 import { useViewportEnter } from './shared/useViewportEnter';
 
-export function Hero() {
+const minPreviewWidth = 960;
+const previewPadding = 32;
+const maxPreviewWidth = 1280 + 96 + 2 * previewPadding;
+
+export function Demo() {
   const [ref, entered] = useViewportEnter(0.66);
+  const showLivePreview = useLivePreview();
   return (
     <Container id="demo">
       <TextContainer ref={ref}>
         <Title style={getSlideInStyle(entered, 0)}>
           Don&apos;t settle for localhost:3000
         </Title>
-        <Subtitle style={getSlideInStyle(entered, 1)}>
+        <Subtitle style={getSlideInStyle(entered, 0)}>
           Expect more from your <NoWrap>dev environment</NoWrap>
         </Subtitle>
-        <CtaContainer style={getSlideInStyle(entered, 2)}>
+        <CtaContainer style={getSlideInStyle(entered, 1)}>
           <CallToAction href="https://github.com/react-cosmos/react-cosmos#getting-started">
             <Play />
             Get started
           </CallToAction>
         </CtaContainer>
-        <Links style={getSlideInStyle(entered, 3)}>
-          <Link href="https://cosmos.flatris.space">
-            <span>Live demo</span>
-            <Chevron />
-          </Link>
+        <Links style={getSlideInStyle(entered, 1)}>
+          {!showLivePreview && (
+            <Link href={livePreviewUrl}>
+              <span>Live demo</span>
+              <Chevron />
+            </Link>
+          )}
           <Link href="https://twitter.com/ReactCosmos/status/1189127279533793281">
             <span>React Cosmos 5 in 21 tweets</span>
             <Chevron />
           </Link>
         </Links>
       </TextContainer>
-      <PreviewContainer style={getSlideInStyle(entered, 4)}>
-        <ExternalLink href="https://cosmos.flatris.space">
-          <Preview src="/screenshot.png" alt="React Cosmos in action" />
-        </ExternalLink>
+      <PreviewContainer style={getSlideInStyle(entered, 2)}>
+        {showLivePreview && <PreviewIframe src={livePreviewUrl} />}
+        {!showLivePreview && (
+          <ExternalLink href={livePreviewUrl}>
+            <PreviewImage src="/screenshot1.png" alt="Props panel" />
+            <PreviewImage src="/screenshot2.png" alt="Fixture search" />
+            <PreviewImage src="/screenshot3.png" alt="Responsive mode" />
+          </ExternalLink>
+        )}
       </PreviewContainer>
     </Container>
   );
+}
+
+function useLivePreview() {
+  const [showPreview, setShowPreview] = React.useState(shouldShowLivePreview());
+  React.useEffect(() => {
+    function handleWindowResize() {
+      setShowPreview(shouldShowLivePreview());
+    }
+    window.addEventListener('resize', handleWindowResize);
+    return () => window.removeEventListener('resize', handleWindowResize);
+  });
+  return showPreview;
+}
+
+function shouldShowLivePreview() {
+  return window.innerWidth >= minPreviewWidth;
 }
 
 const Container = styled.div`
@@ -139,7 +168,7 @@ const Links = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 32px 0 0 0;
+  padding: 16px 0 0 0;
   font-size: 24px;
   line-height: 24px;
   transition: ${slideInTransition};
@@ -195,12 +224,31 @@ const StyledChevron = styled.svg`
 `;
 
 const PreviewContainer = styled.div`
-  margin: 64px 0 0 0;
-  max-width: ${contentMaxWidth}px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: ${maxPreviewWidth}px;
+  padding: 64px 0 0 0;
   transition: ${slideInTransition};
+
+  @media (min-width: ${minPreviewWidth}px) {
+    padding-left: ${previewPadding}px;
+    padding-right: ${previewPadding}px;
+  }
 `;
 
-const Preview = styled.img`
+const PreviewIframe = styled.iframe`
   display: block;
   width: 100%;
+  height: 688px;
+  border: none;
+`;
+
+const PreviewImage = styled.img`
+  display: block;
+  width: 100%;
+  margin: 0 0 32px 0;
+
+  :last-child {
+    margin-bottom: 0;
+  }
 `;
